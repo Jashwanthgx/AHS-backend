@@ -1,4 +1,5 @@
-from sqlalchemy import Column, String, Integer, ForeignKey, Text, JSON
+from datetime import datetime  
+from sqlalchemy import Column, Integer, String, DateTime, Text, ForeignKey, JSON
 from app.database import Base
 
 class Company(Base):
@@ -16,14 +17,15 @@ class Job(Base):
     description = Column(Text, nullable=False)
     custom_questions = Column(JSON, nullable=True) # To dynamically feed Member 1's frontend form
 
-class Applicant(Base):
+class Application(Base):
     __tablename__ = "applications"
 
     id = Column(Integer, primary_key=True, index=True)
-    job_id = Column(Integer, ForeignKey("jobs.id"))
+    job_id = Column(Integer, nullable=False)
     full_name = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    resume_path = Column(String, nullable=True)  # Local storage path to the PDF
-    ai_score = Column(Integer, nullable=True) # Calculated later by Member 3
-    ai_reasoning = Column(Text, nullable=True)  # Calculated later by Member 3
+    resume_path = Column(String, nullable=False)
+    ai_score = Column(Integer, default=0)
+    ai_reasoning = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
     
